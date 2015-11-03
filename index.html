@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+
+<head>
+<script src="src/jquery.2.1.4.min.js"></script>
+<script src="src/uikit/js/uikit.js"></script>
+<link rel="stylesheet" href="src/uikit/css/uikit.css" />
+<link rel="stylesheet" href="src/uikit/css/uikit.gradient.css" />
+<script>
+$(document).ready(function() {
+
+	$.fn.cal = function() {
+		var total = 0;
+
+		$(".item").each(function() {
+			total = total + ($(this).find('.value').val() * $(this).find('.units').val());
+		});
+
+		return total;
+	};
+
+	$.fn.update_total = function(total) {
+		var budget = $('#budget').val();
+		if (total > budget) {
+			$('#total').css('color','red');
+		}
+		else {
+			$('#total').css('color','green');
+		}
+		$('#total').html(total);
+	};
+
+	$(this).update_total($(this).cal());
+
+	$("#add-button").on('click', function() {
+		var $item = $('<div>', {class: "item"});
+		var $nameInput = $('<input />', {type: "text", placeholder: "Name"});
+		var $valueInput = $('<input />', {type: "number", class: "value", placeholder: "0.00"});
+		var $unitsInput = $('<input />', {type: "number", class: "units", placeholder: "1"}).val(1);
+
+		$("<div>", {class: "item"})
+			.append($nameInput)
+			.append(" $")
+			.append($valueInput)
+			.append(" x")
+			.append($unitsInput)
+			.appendTo("#items");
+	});
+
+	$(document).on('focusout', '.value', function() {
+		var t = $(this).cal();
+		$(this).update_total(t);
+	});
+
+	$(document).on('focusout', '.units', function() {
+		var t = $(this).cal();
+		$(this).update_total(t);
+	});
+
+});
+</script>
+</head>
+
+<body>
+
+	<div class="uk-block uk-block-default">
+		<div class="uk-container uk-container-center">
+			<div class="uk-grid">
+				<div class="uk-width-medium-1-2 uk-container-center">
+					<div class="uk-panel uk-panel-box uk-panel-box-primary">
+						<div class="uk-panel-title">Budget</div>
+						<div class="uk-form">
+							$<input type="number" class="uk-form-large" id="budget" placeholder="0.00" step="0.05"/>
+						</div>
+						<hr>
+						<div class="uk-panel-title">Items</div>
+						<div class="uk-form" id="items">
+							<div class="item">
+								<input type="text" placeholder="Name"/>
+								$<input type="number" class="value" placeholder="0.00"/>
+								x<input type="number" class="units" placeholder="Qty" value="1"/>
+							</div>
+						</div>
+						<hr>
+						<button id="add-button" class="uk-button uk-button-primary">Add Item</button>
+						<hr>
+						<div class="uk-text-large">Total: <span id="total"></span></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<div>
+
+</body>
+
+</html>
